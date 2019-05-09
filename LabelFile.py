@@ -33,10 +33,7 @@ for (key, value) in tax.items():
         leaf_to_cate[key] = tax[value['path'].split(',')[3]]['name']
 
 valid_df['category'] = valid_df.path.apply(lambda x: x.split(',')[-2]).map(leaf_to_cate)
-valid_df 
-
-
-
-
+duplicateRows = valid_df[valid_df.duplicated(subset ="image_hash", keep = False)].copy()
+duplicateRows.to_csv("./duplicates.csv", index = False)
 valid_df = valid_df.drop_duplicates(subset="image_hash", keep=False)
 valid_df.to_csv("./wayfair_taxonomy_train.csv", index = False)
