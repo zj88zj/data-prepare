@@ -1,5 +1,6 @@
 import pandas as pd
 import simplejson
+import matplotlib.pyplot as plt
 
 tax = simplejson.load(open("../../Work/merged-taxonomy/markable_merged_taxonomy.json", "rb"))
 
@@ -24,7 +25,6 @@ with open('./leafhashes.txt', 'w') as f:
 
 original_df = pd.read_csv("../../Work/merged-taxonomy/wayfair_furniture.csv")
 valid_df = original_df[original_df.path.apply(lambda x: x.split(',')[-2] in leafhashes)].copy()
-valid_df = valid_df.drop_duplicates(subset="image_hash", keep=False)
 valid_df = valid_df.reset_index(drop=True)
 
 leaf_to_cate = {}
@@ -33,5 +33,10 @@ for (key, value) in tax.items():
         leaf_to_cate[key] = tax[value['path'].split(',')[3]]['name']
 
 valid_df['category'] = valid_df.path.apply(lambda x: x.split(',')[-2]).map(leaf_to_cate)
+valid_df 
 
+
+
+
+valid_df = valid_df.drop_duplicates(subset="image_hash", keep=False)
 valid_df.to_csv("./wayfair_taxonomy_train.csv", index = False)
