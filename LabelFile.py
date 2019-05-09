@@ -1,6 +1,5 @@
 import pandas as pd
 import simplejson
-import matplotlib.pyplot as plt
 
 tax = simplejson.load(open("../../Work/merged-taxonomy/markable_merged_taxonomy.json", "rb"))
 
