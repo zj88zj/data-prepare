@@ -53,11 +53,12 @@ plt.show()
 
           
 ##Select images from original folder based on product_hash (on server :73)
-# with open('./wayfair_furniture.csv', mode='r') as infile:
-#     reader = csv.reader(infile)
-#     product_hash_dic= {rows[10]:rows[7] for rows in reader}
-# prod_hash = pd.DataFrame(columns = ["product_hash"])   
-# prod_hash.product_hash = diff_df["image_hash"][:100].map(product_hash_dic)
+# prod_hash = pd.DataFrame(columns = ["product_hash"])
+# for item in  diff_df["image_hash"][:100]:  
+#     hash_dic = pd.DataFrame(columns = ["product_hash"]) 
+#     hash_dic.product_hash = orig_df.loc[orig_df.image_hash == item].product_hash   
+#     prod_hash =pd.concat([prod_hash,hash_dic])       
+
 # prod_hash = prod_hash.product_hash.unique()
 # output = orig_df[orig_df.product_hash.apply(lambda x: x in prod_hash)]
 # image_hash_list = output.image_hash.values.tolist()
