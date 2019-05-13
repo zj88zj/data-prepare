@@ -4,6 +4,7 @@ import numpy as np
 import cv2
 import os
 from termcolor import colored
+from matplotlib.colors import ListedColormap
 from sklearn.metrics import confusion_matrix
 
 df = pd.read_csv("./duplicates.csv")
@@ -99,4 +100,27 @@ print(df.loc[df["image_hash"]==diff_df["image_hash"][i]].category.unique())
 #     #rsync -a ./furniture_images/ --files-from=/root/data-preparation/scraper/wayfair/image_list.txt ./wayfair_image_400/
 
 #confusion matrix
+category_all = []
+category_list = []
+x = []
+y = []
+for i in range(diff_df.index[-1]):
+    category_all = df.loc[df["image_hash"]==diff_df["image_hash"][i]].category.unique().tolist()
+    category_list += category_all
+    if len(category_all) == 2 :
+        x.append(category_all[0])
+        y.append(category_all[1])
 
+category_uniq = []
+for x in category_list:
+    if x not in category_uniq:
+        category_uniq.append(x)
+
+cm = confusion_matrix(x, y, category_uniq)
+fig = plt.figure()
+ax = fig.add_subplot(111)
+cax = ax.matshow(cm)
+fig.colorbar(cax)
+ax.set_xticklabels([''] + category_uniq, fontsize = 5)
+ax.set_yticklabels([''] + category_uniq, fontsize = 5)
+plt.show()
