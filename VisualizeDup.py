@@ -4,8 +4,8 @@ import numpy as np
 import cv2
 import os
 from termcolor import colored
-from matplotlib.colors import ListedColormap
 from sklearn.metrics import confusion_matrix
+import seaborn as sns
 
 df = pd.read_csv("./duplicates.csv")
 uniq_hash = pd.DataFrame(df["image_hash"].unique())
@@ -76,19 +76,19 @@ diff_df =  uniq_hash.loc[uniq_hash["is_diff"]==True]
 diff_df = diff_df.reset_index(drop=True)
 
 #show the i th image in diff_df
-print("--from 0 to 433--")
-num = input("Enter the index of image:")
-i = int(num) 
-img_dir = "./wayfair_image_400/"
-img_path = os.path.join(img_dir, "{}.jpg".format(diff_df["image_hash"][i]))
-img = cv2.imread(img_path)
-if img is not None:
-    cv2.imshow(img_path, img)
-    cv2.waitKey(600)
-    cv2.destroyAllWindows()
-else:
-    print(colored("Error Loading:" + img_path, "red"))
-print(df.loc[df["image_hash"]==diff_df["image_hash"][i]].category.unique())
+# print("--from 0 to 433--")
+# num = input("Enter the index of image:")
+# i = int(num) 
+# img_dir = "./wayfair_image_400/"
+# img_path = os.path.join(img_dir, "{}.jpg".format(diff_df["image_hash"][i]))
+# img = cv2.imread(img_path)
+# if img is not None:
+#     cv2.imshow(img_path, img)
+#     cv2.waitKey(600)
+#     cv2.destroyAllWindows()
+# else:
+#     print(colored("Error Loading:" + img_path, "red"))
+# print(df.loc[df["image_hash"]==diff_df["image_hash"][i]].category.unique())
 
 # #Select images from original folder based on product_hash (on server :73)
 # image_hash_list = diff_df["image_hash"].tolist()
@@ -112,15 +112,13 @@ for i in range(diff_df.index[-1]):
         y.append(category_all[1])
 
 category_uniq = []
-for x in category_list:
-    if x not in category_uniq:
-        category_uniq.append(x)
+for item in category_list:
+    if item not in category_uniq:
+        category_uniq.append(item)
 
 cm = confusion_matrix(x, y, category_uniq)
-fig = plt.figure()
-ax = fig.add_subplot(111)
-cax = ax.matshow(cm)
-fig.colorbar(cax)
-ax.set_xticklabels([''] + category_uniq, fontsize = 5)
-ax.set_yticklabels([''] + category_uniq, fontsize = 5)
+df_cm = pd.DataFrame(
+        cm, index=category_uniq, columns=category_uniq, 
+    )
+heatmap = sns.heatmap(df_cm, annot=True, fmt="d")
 plt.show()
